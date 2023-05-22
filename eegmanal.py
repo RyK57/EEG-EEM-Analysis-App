@@ -36,12 +36,12 @@ def plot_signals(raw_data, filtered_data, channel_names, fs):
 def main():
     st.title("EEG/EMG Signal Analysis App")
     st.write("-Rithvik Sabnekar")
-    st.write("Please wait atleast 1 minute for detailed analytical graphs")
-    st.markdown(f'<a href="https://drive.google.com/file/d/1TjXY6Ip_W_jfpFTThWZ2DmOIJ1OF99ZH/view?usp=sharing" download>Example Input file (S001R03.edf), source : https://www.physionet.org/content/eegmmidb/1.0.0/</a>', unsafe_allow_html=True)
+    st.write("Please wait at least 1 minute for detailed analytical graphs")
+    st.markdown(f'<a href="https://drive.google.com/file/d/1TjXY6Ip_W_jfpFTThWZ2DmOIJ1OF99ZH/view?usp=sharing" download>Example Input file (S001R03.edf), source: https://www.physionet.org/content/eegmmidb/1.0.0/</a>', unsafe_allow_html=True)
 
     
     # Step 2: Data Upload
-    uploaded_file = st.file_uploader("Upload EEG/EMG data file (.edf type)\n The main purpose of EEG/EMG (Electroencephalography/Electromyography) analysis is to study and understand the electrical activity of the brain (EEG) or muscle activity (EMG). These techniques are widely used in neuroscience and clinical settings to gain insights into brain function, monitor sleep patterns, diagnose neurological disorders, and assess the effectiveness of treatments.", type=["edf"])
+    uploaded_file = st.file_uploader("Upload EEG/EMG data file (.edf type)\n\nThe main purpose of EEG/EMG (Electroencephalography/Electromyography) analysis is to study and understand the electrical activity of the brain (EEG) or muscle activity (EMG). These techniques are widely used in neuroscience and clinical settings to gain insights into brain function, monitor sleep patterns, diagnose neurological disorders, and assess the effectiveness of treatments.", type=["edf"])
 
     if uploaded_file is not None:
         # Step 3: Data Preprocessing
@@ -61,6 +61,17 @@ def main():
             filtered_data = preprocess_data(raw_data, fs)
 
         # Step 4: Visualizations
+        progress_bar = st.progress(0)
+        status_text = st.empty()
+
+        for i in range(101):
+            status_text.text(f"Processing... {i}%")
+            progress_bar.progress(i)
+            time.sleep(0.01)  # Simulate some processing time
+
+        # Display the final result
+        progress_bar.empty()
+        status_text.empty()
         plot_signals(raw_data, filtered_data, channel_names, fs)
 
         # Close the EDF file
