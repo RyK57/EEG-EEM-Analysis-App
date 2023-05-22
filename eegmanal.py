@@ -36,7 +36,7 @@ def plot_signals(raw_data, filtered_data, channel_names, fs):
 def main():
     st.title("EEG/EMG Signal Analysis App")
     st.write("-Rithvik Sabnekar")
-    st.write("Please wait atleast 1 minute for detailed analytical graphs")
+    st.write("Please wait at least 1 minute for detailed analytical graphs")
     st.markdown(f'<a href="https://drive.google.com/file/d/1TjXY6Ip_W_jfpFTThWZ2DmOIJ1OF99ZH/view?usp=sharing" download>Example Input file (S001R03.edf), source : https://www.physionet.org/content/eegmmidb/1.0.0/</a>', unsafe_allow_html=True)
 
     
@@ -49,16 +49,19 @@ def main():
             tmp_filename = tmp_file.name
             uploaded_file.seek(0)
             tmp_file.write(uploaded_file.read())
+        
+        # Close the temporary file
+        tmp_file.close()
 
-            edf_data = pyedflib.EdfReader(tmp_filename)
-            num_channels = edf_data.signals_in_file
-            channel_names = edf_data.getSignalLabels()
-            raw_data = []
-            for channel in range(num_channels):
-                raw_data.append(edf_data.readSignal(channel))
-            raw_data = np.array(raw_data).T  # Transpose to have channels in columns
-            fs = edf_data.samplefrequency(0)  # Get the sampling frequency from the first channel
-            filtered_data = preprocess_data(raw_data, fs)
+        edf_data = pyedflib.EdfReader(tmp_filename)
+        num_channels = edf_data.signals_in_file
+        channel_names = edf_data.getSignalLabels()
+        raw_data = []
+        for channel in range(num_channels):
+            raw_data.append(edf_data.readSignal(channel))
+        raw_data = np.array(raw_data).T  # Transpose to have channels in columns
+        fs = edf_data.samplefrequency(0)  # Get the sampling frequency from the first channel
+        filtered_data = preprocess_data(raw_data, fs)
 
         # Step 4: Visualizations
         plot_signals(raw_data, filtered_data, channel_names, fs)
